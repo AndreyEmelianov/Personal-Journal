@@ -1,10 +1,11 @@
 import './JournalForm.css';
 import Button from '../Button/Button';
 
-const JournalForm = () => {
+const JournalForm = ({ addItemToJournalData }) => {
 	const addJournalItem = (event) => {
 		const formData = new FormData(event.target);
 		const formProps = Object.fromEntries(formData);
+		addItemToJournalData(formProps);
 
 		event.preventDefault();
 	};
@@ -14,7 +15,7 @@ const JournalForm = () => {
 			<input type="text" name="title" />
 			<input type="date" name="date" />
 			<input type="text" name="tag" />
-			<textarea name="post"></textarea>
+			<textarea name="text"></textarea>
 			<Button text="Сохранить" />
 		</form>
 	);
