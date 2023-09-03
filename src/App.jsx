@@ -1,10 +1,8 @@
 import { useState } from 'react';
 import './App.css';
-import CardButton from './components/CardButton/CardButton';
 import Header from './components/Header/Header';
 import JournalAddButton from './components/JournalAddButton/JournalAddButton';
 import JournalForm from './components/JournalForm/JournalForm';
-import JournalItem from './components/JournalItem/JournalItem';
 import JournalList from './components/JournalList/JournalList';
 import Body from './layouts/Body/Body';
 import LeftPanel from './layouts/LeftPanel/LeftPanel';
@@ -39,26 +37,12 @@ function App() {
 		]);
 	};
 
-	const sortItems = (a, b) => {
-		if (a.date < b.date) {
-			return 1;
-		} else {
-			return -1;
-		}
-	};
-
 	return (
 		<div className="app">
 			<LeftPanel>
 				<Header />
 				<JournalAddButton />
-				<JournalList>
-					{journalData.sort(sortItems).map((element) => (
-						<CardButton key={element.id}>
-							<JournalItem title={element.title} text={element.text} date={element.date} />
-						</CardButton>
-					))}
-				</JournalList>
+				<JournalList journalData={journalData} />
 			</LeftPanel>
 			<Body>
 				<JournalForm addItemToJournalData={addItemToJournalData} />
