@@ -11,11 +11,13 @@ import LeftPanel from './layouts/LeftPanel/LeftPanel';
 
 const INITIAL_DATA = [
 	{
+		id: 1,
 		title: 'Подготовка к обновлению курсов',
 		text: 'Горные походы открывают удивительные природные ландшафты',
 		date: new Date(),
 	},
 	{
+		id: 2,
 		title: 'Поход в горы',
 		text: 'Думал, что-то очень долго ...',
 		date: new Date(),
@@ -32,8 +34,17 @@ function App() {
 				text: newItem.text,
 				title: newItem.title,
 				date: new Date(newItem.date),
+				id: Math.max(...prev.map((item) => item.id)) + 1,
 			},
 		]);
+	};
+
+	const sortItems = (a, b) => {
+		if (a.date < b.date) {
+			return 1;
+		} else {
+			return -1;
+		}
 	};
 
 	return (
@@ -42,8 +53,8 @@ function App() {
 				<Header />
 				<JournalAddButton />
 				<JournalList>
-					{journalData.map((element) => (
-						<CardButton key={element.text}>
+					{journalData.sort(sortItems).map((element) => (
+						<CardButton key={element.id}>
 							<JournalItem title={element.title} text={element.text} date={element.date} />
 						</CardButton>
 					))}
