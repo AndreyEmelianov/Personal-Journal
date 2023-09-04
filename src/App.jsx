@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 import Header from './components/Header/Header';
 import JournalAddButton from './components/JournalAddButton/JournalAddButton';
@@ -7,23 +7,26 @@ import JournalList from './components/JournalList/JournalList';
 import Body from './layouts/Body/Body';
 import LeftPanel from './layouts/LeftPanel/LeftPanel';
 
-const INITIAL_DATA = [
-	{
-		id: 1,
-		title: 'Подготовка к обновлению курсов',
-		text: 'Горные походы открывают удивительные природные ландшафты',
-		date: new Date(),
-	},
-	{
-		id: 2,
-		title: 'Поход в горы',
-		text: 'Думал, что-то очень долго ...',
-		date: new Date(),
-	},
-];
-
 function App() {
-	const [journalData, setJournalData] = useState(INITIAL_DATA);
+	const [journalData, setJournalData] = useState([]);
+
+	useEffect(() => {
+		const data = JSON.parse(localStorage.getItem('data'));
+		if (data) {
+			setJournalData(
+				data.map((item) => ({
+					...item,
+					date: new Date(item.date),
+				}))
+			);
+		}
+	}, []);
+
+	useEffect(() => {
+		if (journalData.length) {
+			localStorage.setItem('data', JSON.stringify(journalData));
+		}
+	}, [journalData]);
 
 	const addItemToJournalData = (newItem) => {
 		setJournalData((prev) => [
