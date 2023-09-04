@@ -6,6 +6,8 @@ import JournalList from './components/JournalList/JournalList';
 import Body from './layouts/Body/Body';
 import LeftPanel from './layouts/LeftPanel/LeftPanel';
 import { useLocalStorage } from './hooks/use-localstorage.hook';
+import { UserContext } from './context/user.context';
+import { useState } from 'react';
 
 function mapItems(items) {
 	if (!items) {
@@ -19,6 +21,7 @@ function mapItems(items) {
 }
 
 function App() {
+	const [userId, setUserId] = useState(1);
 	const [items, setItems] = useLocalStorage('data');
 
 	const addItemToJournalData = (newItem) => {
@@ -34,16 +37,18 @@ function App() {
 	};
 
 	return (
-		<div className="app">
-			<LeftPanel>
-				<Header />
-				<JournalAddButton />
-				<JournalList journalData={mapItems(items)} />
-			</LeftPanel>
-			<Body>
-				<JournalForm addItemToJournalData={addItemToJournalData} />
-			</Body>
-		</div>
+		<UserContext.Provider value={{ userId, setUserId }}>
+			<div className="app">
+				<LeftPanel>
+					<Header />
+					<JournalAddButton />
+					<JournalList journalData={mapItems(items)} />
+				</LeftPanel>
+				<Body>
+					<JournalForm addItemToJournalData={addItemToJournalData} />
+				</Body>
+			</div>
+		</UserContext.Provider>
 	);
 }
 
