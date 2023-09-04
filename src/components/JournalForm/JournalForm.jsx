@@ -27,16 +27,18 @@ const JournalForm = ({ addItemToJournalData }) => {
 	useEffect(() => {
 		if (isFormReadyToSubmit) {
 			addItemToJournalData(values);
+			dispatchForm({ type: 'CLEAR' });
 		}
 	}, [isFormReadyToSubmit]);
- 
+
+	const onChange = (event) => {
+		dispatchForm({ type: 'SET_VALUE', payload: { [event.target.name]: event.target.value } });
+	};
+
 	const addJournalItem = (event) => {
 		event.preventDefault();
 
-		const formData = new FormData(event.target);
-		const formProps = Object.fromEntries(formData);
-
-		dispatchForm({ type: 'SUBMIT', payload: formProps });
+		dispatchForm({ type: 'SUBMIT' });
 	};
 
 	return (
@@ -44,6 +46,8 @@ const JournalForm = ({ addItemToJournalData }) => {
 			<div>
 				<input
 					type="text"
+					value={values.title}
+					onChange={onChange}
 					name="title"
 					className={cn(styles['input-title'], {
 						[styles.invalid]: !isValid.title,
@@ -58,6 +62,8 @@ const JournalForm = ({ addItemToJournalData }) => {
 				</label>
 				<input
 					type="date"
+					value={values.date}
+					onChange={onChange}
 					name="date"
 					id="date"
 					className={cn(styles.input, {
@@ -71,10 +77,19 @@ const JournalForm = ({ addItemToJournalData }) => {
 					<img src="/folder.svg" alt="Иконка папки" />
 					<span>Метки</span>
 				</label>
-				<input type="text" id="tag" name="tag" className={styles.input} />
+				<input
+					type="text"
+					id="tag"
+					name="tag"
+					className={styles.input}
+					value={values.tag}
+					onChange={onChange}
+				/>
 			</div>
 
 			<textarea
+				value={values.text}
+				onChange={onChange}
 				name="text"
 				cols="30"
 				rows="10"
