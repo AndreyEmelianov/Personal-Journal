@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from 'react';
+import { useEffect, useReducer, useRef } from 'react';
 import cn from 'classnames';
 
 import Button from '../Button/Button';
@@ -8,12 +8,30 @@ import { INITIAL_STATE, formReducer } from './JournalForm.state';
 
 const JournalForm = ({ addItemToJournalData }) => {
 	const [formState, dispatchForm] = useReducer(formReducer, INITIAL_STATE);
-
 	const { isValid, isFormReadyToSubmit, values } = formState;
+
+	const titleRef = useRef();
+	const dateRef = useRef();
+	const textRef = useRef();
+
+	const focusError = (isValid) => {
+		switch (true) {
+			case !isValid.title:
+				titleRef.current.focus();
+				break;
+			case !isValid.date:
+				dateRef.current.focus();
+				break;
+			case !isValid.text:
+				textRef.current.focus();
+				break;
+		}
+	};
 
 	useEffect(() => {
 		let timerId;
 		if (!isValid.date || !isValid.title || !isValid.text) {
+			focusError(isValid);
 			timerId = setTimeout(() => {
 				dispatchForm({ type: 'RESET_VALIDITY' });
 			}, 2000);
@@ -29,7 +47,7 @@ const JournalForm = ({ addItemToJournalData }) => {
 			addItemToJournalData(values);
 			dispatchForm({ type: 'CLEAR' });
 		}
-	}, [isFormReadyToSubmit]);
+	}, [isFormReadyToSubmit, values, addItemToJournalData]);
 
 	const onChange = (event) => {
 		dispatchForm({ type: 'SET_VALUE', payload: { [event.target.name]: event.target.value } });
@@ -48,6 +66,7 @@ const JournalForm = ({ addItemToJournalData }) => {
 					type="text"
 					value={values.title}
 					onChange={onChange}
+					ref={titleRef}
 					name="title"
 					className={cn(styles['input-title'], {
 						[styles.invalid]: !isValid.title,
@@ -64,6 +83,7 @@ const JournalForm = ({ addItemToJournalData }) => {
 					type="date"
 					value={values.date}
 					onChange={onChange}
+					ref={dateRef}
 					name="date"
 					id="date"
 					className={cn(styles.input, {
@@ -90,6 +110,7 @@ const JournalForm = ({ addItemToJournalData }) => {
 			<textarea
 				value={values.text}
 				onChange={onChange}
+				ref={textRef}
 				name="text"
 				cols="30"
 				rows="10"
