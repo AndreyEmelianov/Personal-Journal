@@ -53,6 +53,10 @@ const JournalForm = ({ addItemToJournalData }) => {
 		}
 	}, [isFormReadyToSubmit, values, addItemToJournalData]);
 
+	useEffect(() => {
+		dispatchForm({ type: 'SET_VALUE', payload: { userId } });
+	}, [userId]);
+
 	const onChange = (event) => {
 		dispatchForm({ type: 'SET_VALUE', payload: { [event.target.name]: event.target.value } });
 	};
