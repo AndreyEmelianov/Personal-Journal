@@ -49,6 +49,10 @@ function App() {
 		}
 	};
 
+	const deleteItem = (id) => {
+		setItems([...items.filter((i) => i.id !== id)]);
+	};
+
 	return (
 		<UserContextProvider>
 			<div className="app">
@@ -58,7 +62,11 @@ function App() {
 					<JournalList journalData={mapItems(items)} setSelectedItem={setSelectedItem} />
 				</LeftPanel>
 				<Body>
-					<JournalForm addItemToJournalData={addItemToJournalData} selectedItem={selectedItem} />
+					<JournalForm
+						addItemToJournalData={addItemToJournalData}
+						selectedItem={selectedItem}
+						onDelete={deleteItem}
+					/>
 				</Body>
 			</div>
 		</UserContextProvider>
